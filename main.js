@@ -1,0 +1,46 @@
+const displayJoke = document.getElementById("display-joke");
+const category = document.getElementById("category");
+const select = document.querySelector("select");
+let chosenCategory = `dev`;
+
+select.addEventListener("change", () => {
+	chosenCategory = select.value;
+});
+
+async function generateCategoryOptions() {
+	let outPut = ``;
+	const results = await fetch(`https://api.chucknorris.io/jokes/categories`);
+	const data = await results.json();
+
+	category.removeAttribute("disabled");
+
+	data.forEach((category) => {
+		outPut += `<option value="${category}">${category}</option>`;
+	});
+
+	category.innerHTML = outPut;
+	category[3].selected = true;
+}
+generateCategoryOptions();
+
+async function fetchJoke() {
+	const errorMessage = `"DO NOT DISTURB!" Chuck Norris is currently entertaining guests in his hotel room.`;
+
+	try {
+		const results = await fetch(
+			`https://api.chucknorris.io/jokes/random?category=${chosenCategory}`
+		);
+
+		if (!results.ok) {
+			displayJoke.textContent = errorMessage;
+			throw new Error("Request failed.");
+		}
+
+		const data = await results.json();
+		displayJoke.textContent = data.value;
+		console.log(data.value);
+	} catch (error) {
+		displayJoke.textContent = errorMessage;
+		console.error(error);
+	}
+}
