@@ -9,17 +9,27 @@ select.addEventListener("change", () => {
 
 async function generateCategoryOptions() {
 	let outPut = ``;
-	const results = await fetch(`https://api.chucknorris.io/jokes/categories`);
-	const data = await results.json();
 
-	category.removeAttribute("disabled");
+	try {
+		const results = await fetch(`https://api.chucknorris.io/jokes/categories`);
 
-	data.forEach((category) => {
-		outPut += `<option value="${category}">${category}</option>`;
-	});
+		if (!results.ok) {
+			throw new Error("Request failed.");
+		}
 
-	category.innerHTML = outPut;
-	category[3].selected = true;
+		const data = await results.json();
+
+		category.removeAttribute("disabled");
+
+		data.forEach((category) => {
+			outPut += `<option value="${category}">${category}</option>`;
+		});
+
+		category.innerHTML = outPut;
+		category[3].selected = true;
+	} catch {
+		console.error(error);
+	}
 }
 generateCategoryOptions();
 
