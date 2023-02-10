@@ -1,10 +1,9 @@
 const displayJoke = document.getElementById("display-joke");
 const category = document.getElementById("category");
-const select = document.querySelector("select");
 let chosenCategory = `dev`;
 
-select.addEventListener("change", () => {
-	chosenCategory = select.value;
+category.addEventListener("change", () => {
+	chosenCategory = category.value;
 });
 
 async function generateCategoryOptions() {
